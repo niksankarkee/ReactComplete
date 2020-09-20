@@ -2,22 +2,54 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-
-// Create a react component
-
-const App = () => {
-    const style = { backgroundColor: 'blue', color: 'white' };
-    const buttonText = 'Click Me!'
-    return (
-        <div>
-            <label className="label" htmlFor="name">Enter name: </label>
-            <input type="text" id="name" />
-            <button style={style}>{buttonText}</button>
-        </div>
-
-    );
-};
+import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner';
 
 
-// Take the react component and show it on the screen
+
+class App extends React.Component {
+    state = {
+        lat: null,
+        errorMessage: null
+    };
+
+    componentDidMount() {
+        window.navigator.geolocation.getCurrentPosition(
+            position => this.setState({ lat: position.coords.latitude }),
+            err => this.setState({ errorMessage: err.message })
+        );
+    }
+
+    renderContent() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return (
+                <div>
+                    Error: {this.state.errorMessage}
+                </div>
+            );
+        }
+        if (!this.state.errorMessage && this.state.lat) {
+            return (
+                <>
+                    <SeasonDisplay lat={this.state.lat} />
+                </>
+            );
+        }
+        return (
+            <>
+                <Spinner message="Please accept location request." />
+            </>
+        );
+    }
+
+    // React have to define render!!
+    render() {
+        return (
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
+    }
+}
+
 render(<App />, document.querySelector('#root'));
