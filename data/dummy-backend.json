@@ -1,4 +1,4 @@
-﻿{
+{
   "products": [
     { "id": "p1", "title": "Product 1", "description": "This is product 1" },
     { "id": "p2", "title": "Product 2", "description": "This is product 2" },
